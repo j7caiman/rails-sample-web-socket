@@ -1,0 +1,32 @@
+<input id="name" placeholder="name" />
+<input id="boopButton" type="button" value="boop"/>
+
+<p id="messages">messages: </p>
+
+<script type="text/javascript">
+  $(document).ready(function() {
+    var dispatcher = new WebSocketRails('localhost:3000/websocket');
+    dispatcher.on_open = function(data) {
+      console.log('Connection has been established: ', data);
+      dispatcher.trigger('hello');
+    };
+
+    $("#boopButton").click(function() {
+      console.log("boop button clicked")
+      dispatcher.trigger('button_clicked', {
+        button: 'boop',
+        name: $("#name").val()
+      });
+    });
+
+    channel = dispatcher.subscribe('channel_updates');
+
+    channel.bind('new_person', function() {
+      $("#messages").append("<br/>a new person joined.");
+    });
+
+    channel.bind('boopcast', function(data) {
+      $("#messages").append("<br/>user " + data + " booped the button.");
+    });
+  });
+</script>

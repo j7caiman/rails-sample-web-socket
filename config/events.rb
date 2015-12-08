@@ -1,4 +1,7 @@
 WebsocketRails::EventMap.describe do
+  subscribe :hello, 'thing#person_joined'
+  subscribe :button_clicked, 'thing#broadcast_boop'
+
   # You can use this file to map incoming events to controller actions.
   # One event can be mapped to any number of controller actions. The
   # actions will be executed in the order they were subscribed.
